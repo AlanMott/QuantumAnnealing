@@ -20,7 +20,8 @@ def get_token():
     '''Returns personal access token. Only required if submitting to autograder.'''
 
     # TODO: Enter your token here
-    MyToken = "Z209-62c77afc35238c74df619f5c1bd78edf1c70a956"
+    # MyToken = "Z209-62c77afc35238c74df619f5c1bd78edf1c70a956"
+    MyToken = "DEV-27c9da4043a245ca615dc8dadfcdbbb8b20379d2"
     return MyToken
 
 
