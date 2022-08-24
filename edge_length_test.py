@@ -141,4 +141,9 @@ cqm.add_constraint(quicksum(D[j] * x[i][j][m]for j in range(N) for i in range(N)
 # Constraint 5 - The demand on any route cannot exceed the vehicles capacity
 cqm.add_constraint(quicksum(m[i] for i in range(N) <= cap))
 
+# Initialize the CQM solver
+sampler = LeapHybridCQMSampler()
+
+# Solve the problem using the CQM solver
+sampleset = sampler.sample_cqm(cqm, label='Vehicle Routing Problem')
 
