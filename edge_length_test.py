@@ -5,6 +5,12 @@ import tkinter
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
+from dimod import ConstrainedQuadraticModel, Binary
+from dimod import quicksum
+from dwave.system import LeapHybridCQMSampler
+
+# Set D-Wave Leap Token
+MyToken="Z209-62c77afc35238c74df619f5c1bd78edf1c70a956"
 
 # Use networkx
 # Create our dictionaries
@@ -78,6 +84,13 @@ x2, y2 = nxnodepos_j
 nxdist = np.sqrt((x1-x2)**2 + (y1-y2)**2)
 print("Using Networkx, the distance is: ")
 print(nxdist)
+"""
+# This code uses the nx graph, but doesn't help us
+G.add_edge(1,2)
+G.add_edge(2,3)
+nxshort = nx.shortest_path_length(G, source=2, target=3)
+print(nxshort)
+"""
 
 # Calculate edge length using math library
 a = []
@@ -99,20 +112,33 @@ else:
 nx.draw_networkx(G, with_labels = True)
 plt.show()
 """
+
 # Start of Ocean code
 # Define our binary decision variable
 x = [0, 1]
 # Set No. of Trucks
 M = 5
-# List of trucksx= [0, 1]
+# List of trucks= [0, 1]
 V = [1, 2, 3, 4, 5]
 # Set the fixed cost per vehicle per unit distance (arbitrary value chosen)
-fcm = 100
+cap = 100
 # set the Node (customer) set (use the node dictionary from above)
 N = node_dict
 
-"""
+# Initialize CQM
 cqm = ConstrainedQuadraticModel()
+# Define Objective Function
 obj_var = quicksum(fcm[k] for k in range(V) * x[i][j] for i in range(N) for j in range(N))
 cqm.set_objective(obj_var)
-"""
+# Constraint 1 - All vehicles return to depot
+cqm.add_constraint(quicksum(x[i] for i in range(N)) == 1, label='choose 1')
+# Constraint 2 - Visit each node once only
+cqm.add_constraint(quicksum(x[i][j][m] for i in range(N) for m in range(M)))
+# Constraint 3 - If a vehicle arrives at a node, it must leave it
+cqm.add_constraint(quicksum(x[m][i] for i in range(N) for m in range(M))) == quicksum(x[j][m] for j in range[N] for m in range(M))
+# Constraint 4 - For all journeys between two nodes, the demand at j must equal that carried by vehicle
+cqm.add_constraint(quicksum(D[j] * x[i][j][m]for j in range(N) for i in range(N) for m in range(M) == Dk[i][j][cap]))
+# Constraint 5 - The demand on any route cannot exceed the vehicles capacity
+cqm.add_constraint(quicksum(m[i] for i in range(N) <= cap))
+
+
