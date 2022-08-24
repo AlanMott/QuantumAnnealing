@@ -99,3 +99,20 @@ else:
 nx.draw_networkx(G, with_labels = True)
 plt.show()
 """
+# Start of Ocean code
+# Define our binary decision variable
+x = [0, 1]
+# Set No. of Trucks
+M = 5
+# List of trucksx= [0, 1]
+V = [1, 2, 3, 4, 5]
+# Set the fixed cost per vehicle per unit distance (arbitrary value chosen)
+fcm = 100
+# set the Node (customer) set (use the node dictionary from above)
+N = node_dict
+
+"""
+cqm = ConstrainedQuadraticModel()
+obj_var = quicksum(fcm[k] for k in range(V) * x[i][j] for i in range(N) for j in range(N))
+cqm.set_objective(obj_var)
+"""
